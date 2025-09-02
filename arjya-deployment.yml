@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arjya-dp
+  namespace: arjya
+  labels:
+    app: arjya-nginx-dp
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: arjya-nginx-dp
+  template:
+    metadata:
+      labels:
+        app: arjya-nginx-dp
+    spec:
+      containers:
+        - name: arjya-user-dp
+          image: nginx:1.21.3
+          ports:
+          - containerPort: 80

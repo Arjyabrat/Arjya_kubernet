@@ -1,0 +1,6 @@
+eksctl create cluster \
+  --name cluster1 \
+  --region us-east-1 \
+  --node-type t2.medium \
+  --nodes 4 \
+  --zones us-east-1a,us-east-1b,us-east-1c,us-east-1d

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: arjya-service
+  namespace: arjya
+spec:
+  selector:
+    app: arjya-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer
+
