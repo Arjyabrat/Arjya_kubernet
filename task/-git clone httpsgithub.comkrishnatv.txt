@@ -1,0 +1,125 @@
+->git clone https://github.com/krishnatva/Todo_app.git
+->cd Todo_app
+->docker build -t arjyabrat/todo-app .
+->docker push arjyabrat/todo-app
+->copy image
+->got to cluster create namespace
+->create a folder
+
+->deployment.yaml ----------------------frontened
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: arjya-app
+  namespace: arjya
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: arjya-app
+  template:
+    metadata:
+      labels:
+        app: arjya-app
+    spec:
+      containers:
+        - name: arjya-app
+          image: arjyabrat/todo-app:latest
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: arjya-config
+            - secretRef:
+                name: arjya-secret
+
+
+->apiVersion: apps/v1-------------------------------------backened
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: arjya
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:13
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: arjya-secret
+              key: POSTGRES_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: arjya-secret
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: arjya-config
+              key: POSTGRES_DB
+
+apiVersion: v1--------------------------------service
+kind: Service
+metadata:
+  name: arjya-service
+  namespace: arjya
+spec:
+  selector:
+    app: arjya-app
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 5000
+  type: LoadBalancer
+
+apiVersion: v1-----------------------------------------config
+kind: ConfigMap
+metadata:
+  name: arjya-config
+  namespace: arjya
+data:
+  POSTGRES_HOST: "postgres"
+  POSTGRES_DB: "todo_db"
+
+apiVersion: v1---------------------------------------------secret
+kind: Secret
+metadata:
+  name: arjya-secret
+  namespace: arjya
+type: Opaque
+stringData:
+  POSTGRES_USER: bXVyYWxpLWlwbA==
+  POSTGRES_PASSWORD: bXVyYWxpQDQ1NiUm
+
+apiVersion: v1--------------------------------------------postgress
+kind: Service
+metadata:
+  name: postgres
+  namespace: arjya
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: postgres
+
+
+command:
+-----------
+kubectl apply -f name
+kubectl get all -n arjya
+kubectl rollout restart deployment arjya-app -n arjya
+kubectl get pods -n arjya -o wide
