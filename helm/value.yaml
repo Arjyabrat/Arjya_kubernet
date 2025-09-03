@@ -1,0 +1,12 @@
+namespace: arjya
+replicas: 2
+labels:
+  app: arjya-app
+name: arjya-container
+image:
+  repository: muralisocial123/ipl
+  tag: latest
+ports: 3000
+service:
+  port: 80
+  type: LoadBalancer

@@ -1,0 +1,17 @@
+https://github.com/harsha9052781670/MedicalBilling.git
+
+
+ python: -https://github.com/krishnatva/Todo_app.git
+ 
+
+git clone https://github.com/teja-2502/Retail-App_kubernetes.git -b master
+ 
+image: saiteja2502/userprofileretail:latest
+
+
+
+
+
+git clone https://github.com/teja-2502/Retail-App_kubernetes.git -b master
+ 
+image: saiteja2502/userprofileretail:latest
